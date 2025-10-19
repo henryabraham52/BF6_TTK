@@ -11,16 +11,17 @@ const RANGES = ['10M', '20M', '35M', '50M', '70M'];
  * Calculate Time-to-Kill in milliseconds
  * @param {number} damage - Damage per shot
  * @param {number} rpm - Rounds per minute
+ * @param {number} adsTime - ADS time in milliseconds (optional)
  * @returns {number} TTK in milliseconds
  */
-function calculateTTK(damage, rpm) {
+function calculateTTK(damage, rpm, adsTime = 0) {
     if (!damage || !rpm || damage <= 0 || rpm <= 0) {
         return null;
     }
 
     const shotsToKill = Math.ceil(PLAYER_HEALTH / damage);
     const timeBetweenShots = 60000 / rpm; // Convert RPM to milliseconds
-    const ttk = (shotsToKill - 1) * timeBetweenShots;
+    const ttk = (shotsToKill - 1) * timeBetweenShots + (adsTime || 0);
 
     return Math.round(ttk * 10) / 10; // Round to 1 decimal place
 }

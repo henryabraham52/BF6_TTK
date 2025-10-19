@@ -68,7 +68,8 @@ function processWeaponData(rawData) {
                 '50M': parseNumeric(row['50M']),
                 '70M': parseNumeric(row['70M']),
                 'RPM': parseNumeric(row['RPM']),
-                'DPS': parseNumeric(row['DPS'])
+                'DPS': parseNumeric(row['DPS']),
+                'ADS': parseNumeric(row['ADS'])
             };
 
             // Calculate TTK for each range

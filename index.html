@@ -81,6 +81,15 @@
                 </div>
 
                 <div class="control-group">
+                    <label for="fireMode">Fire Mode:</label>
+                    <select id="fireMode">
+                        <option value="hip">Hip Fire (Instant)</option>
+                        <option value="ads">ADS (+ Aim Time)</option>
+                    </select>
+                    <small>Hip Fire = instant shooting, ADS = includes aim down sights time</small>
+                </div>
+
+                <div class="control-group">
                     <button id="resetFilters" class="btn-primary">Reset Filters</button>
                     <button id="compareAll" class="btn-secondary">Compare All</button>
                 </div>
@@ -147,6 +156,7 @@
                             <th>70M</th>
                             <th>RPM</th>
                             <th>DPS</th>
+                            <th>ADS (ms)</th>
                             <th>TTK (10M)</th>
                             <th>Status</th>
                         </tr>

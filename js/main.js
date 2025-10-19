@@ -8,7 +8,8 @@ let currentFilters = {
     types: ['ALL'],
     range: 'all',
     chartType: 'damage',
-    search: ''
+    search: '',
+    includeADS: false
 };
 
 let isDarkTheme = true; // Default to dark theme
@@ -94,6 +95,12 @@ function setupEventListeners() {
     if (exportBtn) {
         exportBtn.addEventListener('click', handleExportCSV);
     }
+
+    // Fire mode selector
+    const fireMode = document.getElementById('fireMode');
+    if (fireMode) {
+        fireMode.addEventListener('change', handleFireModeChange);
+    }
 }
 
 /**
@@ -141,7 +148,8 @@ function handleResetFilters() {
         types: ['ALL'],
         range: 'all',
         chartType: 'damage',
-        search: ''
+        search: '',
+        includeADS: false
     };
 
     // Reset UI controls
@@ -163,6 +171,11 @@ function handleResetFilters() {
     const tableSearch = document.getElementById('tableSearch');
     if (tableSearch) {
         tableSearch.value = '';
+    }
+
+    const fireMode = document.getElementById('fireMode');
+    if (fireMode) {
+        fireMode.value = 'hip';
     }
 
     // Update visualization
@@ -192,6 +205,15 @@ function handleTableSearch(event) {
     currentFilters.search = event.target.value;
     const weapons = applyFilters(currentFilters);
     populateWeaponTable(weapons);
+}
+
+/**
+ * Handle fire mode change (Hip Fire vs ADS)
+ */
+function handleFireModeChange(event) {
+    currentFilters.includeADS = event.target.value === 'ads';
+    updateVisualization();
+    populateWeaponTable(applyFilters(currentFilters));
 }
 
 /**
