@@ -99,8 +99,14 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
     // Sort by TTK (ascending - lower is better)
     const sortedWeapons = sortWeapons(validWeapons, 'ttk', range);
 
+    // Calculate TTK with current ADS mode
+    const ttksWithADS = sortedWeapons.map(w => {
+        const adsTime = (currentFilters && currentFilters.includeADS) ? w.ADS : 0;
+        return calculateTTK(w[range], w.RPM, adsTime);
+    });
+
     const trace = {
-        x: sortedWeapons.map(w => w[`TTK_${range}`]),
+        x: ttksWithADS,
         y: sortedWeapons.map(w => w.Weapon),
         type: 'bar',
         orientation: 'h',
@@ -111,13 +117,14 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
         hovertemplate:
             `<b>%{y}</b><br>` +
             `TTK: %{x}ms<br>` +
+            `Mode: ${(currentFilters && currentFilters.includeADS) ? 'ADS' : 'Hip Fire'}<br>` +
             `<extra></extra>`
     };
 
     const layout = {
         ...CHART_LAYOUT_DEFAULTS,
         title: {
-            text: `Time-to-Kill at ${range}`,
+            text: `Time-to-Kill at ${range} (${(currentFilters && currentFilters.includeADS) ? 'ADS Mode' : 'Hip Fire'})`,
             font: { size: 16, color: '#fff' }
         },
         xaxis: {

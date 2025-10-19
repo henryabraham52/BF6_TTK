@@ -307,7 +307,11 @@ function populateWeaponTable(weapons) {
             row.classList.add('incomplete-data');
         }
 
-        const ttk10M = weapon.TTK_10M ? `${weapon.TTK_10M}ms` : 'N/A';
+        // Calculate TTK with current ADS mode
+        const adsTime = currentFilters.includeADS ? weapon.ADS : 0;
+        const ttk10M = weapon['10M'] && weapon.RPM
+            ? `${calculateTTK(weapon['10M'], weapon.RPM, adsTime)}ms`
+            : 'N/A';
         const status = weapon.isComplete
             ? '<span class="status-badge complete">Complete</span>'
             : '<span class="status-badge incomplete">Incomplete</span>';
@@ -322,6 +326,7 @@ function populateWeaponTable(weapons) {
             <td>${formatNumber(weapon['70M'])}</td>
             <td>${formatNumber(weapon.RPM)}</td>
             <td>${formatNumber(weapon.DPS)}</td>
+            <td>${formatNumber(weapon.ADS)}</td>
             <td>${ttk10M}</td>
             <td>${status}</td>
         `;
