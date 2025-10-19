@@ -148,6 +148,9 @@ async function init() {
         // Setup event listeners
         setupEventListeners();
 
+        // Ensure UI matches default filter state
+        applyDefaultFilterState();
+
         // Apply saved theme preference
         loadThemePreference();
 
@@ -311,6 +314,39 @@ function handleResetFilters() {
     resetFilters();
     updateVisualization();
     populateWeaponTable(getAllWeapons());
+}
+
+/**
+ * Apply default filter state to UI elements (matches Reset Filters)
+ */
+function applyDefaultFilterState() {
+    // Ensure UI controls match the default currentFilters state
+    const typeFilter = document.getElementById('weaponTypeFilter');
+    if (typeFilter) {
+        Array.from(typeFilter.options).forEach(option => {
+            option.selected = option.value === 'ALL';
+        });
+    }
+
+    const rangeSelector = document.getElementById('rangeSelector');
+    if (rangeSelector) {
+        rangeSelector.value = 'all';
+    }
+
+    const chartType = document.getElementById('chartType');
+    if (chartType) {
+        chartType.value = 'damage';
+    }
+
+    const fireMode = document.getElementById('fireMode');
+    if (fireMode) {
+        fireMode.value = 'hip';
+    }
+
+    const tableSearch = document.getElementById('tableSearch');
+    if (tableSearch) {
+        tableSearch.value = '';
+    }
 }
 
 /**
