@@ -138,7 +138,7 @@ No installation required! This is a static website that runs entirely in the bro
 1. Push your code to GitHub
 2. Go to **Settings → Pages**
 3. Under **Source**, select **Deploy from branch**
-4. Select **main** branch and **/ (root)** folder
+4. Select **master** branch and **/ (root)** folder
 5. Click **Save**
 6. Your site will be live at `https://henryabraham52.github.io/BF6_TTK/`
 
