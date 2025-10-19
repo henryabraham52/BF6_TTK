@@ -1,7 +1,7 @@
 # 🎯 Battlefield 6 - Time-to-Kill (TTK) Visualization
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub Pages](https://img.shields.io/badge/demo-live-success)](https://henryabraham52.github.io/ttm/)
+[![GitHub Pages](https://img.shields.io/badge/demo-live-success)](https://henryabraham52.github.io/BF6_TTK/)
 [![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 An interactive web-based visualization tool for analyzing Battlefield 6 weapon statistics, focusing on Time-to-Kill (TTK) metrics across different ranges and weapon types.
@@ -21,7 +21,7 @@ An interactive web-based visualization tool for analyzing Battlefield 6 weapon s
 
 ## 🚀 Live Demo
 
-Visit the live application: **[https://henryabraham52.github.io/ttm/](https://henryabraham52.github.io/ttm/)**
+Visit the live application: **[https://henryabraham52.github.io/BF6_TTK/](https://henryabraham52.github.io/BF6_TTK/)**
 
 ## 📸 Screenshots
 
@@ -60,7 +60,7 @@ const ttk = (shotsToKill - 1) * timeBetweenShots;
 ## 📁 Project Structure
 
 ```
-ttm/
+BF6_TTK/
 ├── index.html              # Main application page
 ├── css/
 │   └── style.css           # Styles with Battlefield theme
@@ -107,8 +107,8 @@ No installation required! This is a static website that runs entirely in the bro
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/henryabraham52/ttm.git
-   cd ttm
+   git clone https://github.com/henryabraham52/BF6_TTK.git
+   cd BF6_TTK
    ```
 
 2. **Start a local server**
@@ -140,7 +140,7 @@ No installation required! This is a static website that runs entirely in the bro
 3. Under **Source**, select **Deploy from branch**
 4. Select **main** branch and **/ (root)** folder
 5. Click **Save**
-6. Your site will be live at `https://henryabraham52.github.io/ttm/`
+6. Your site will be live at `https://henryabraham52.github.io/BF6_TTK/`
 
 ## 📊 Data Structure
 
@@ -170,8 +170,8 @@ We welcome contributions from the Battlefield community! There are many ways to 
 
 1. **Add Missing Weapon Data** - Help complete the database
 2. **Verify Existing Data** - Confirm accuracy of stats
-3. **Report Bugs** - [Create an issue](https://github.com/henryabraham52/ttm/issues/new?template=bug_report.md)
-4. **Suggest Features** - [Request a feature](https://github.com/henryabraham52/ttm/issues/new?template=feature_request.md)
+3. **Report Bugs** - [Create an issue](https://github.com/henryabraham52/BF6_TTK/issues/new?template=bug_report.md)
+4. **Suggest Features** - [Request a feature](https://github.com/henryabraham52/BF6_TTK/issues/new?template=feature_request.md)
 5. **Improve Code** - Submit pull requests
 
 ### Quick Start Guide
@@ -193,7 +193,7 @@ We welcome contributions from the Battlefield community! There are many ways to 
 | ⚠️ Incomplete Weapons | 10 | 30% |
 | **Total** | **34** | **100%** |
 
-**Help us reach 100% completion!** Check the [Issues](https://github.com/henryabraham52/ttm/issues) tab for weapons needing data.
+**Help us reach 100% completion!** Check the [Issues](https://github.com/henryabraham52/BF6_TTK/issues) tab for weapons needing data.
 
 ## 🎨 Features Roadmap
 
@@ -216,7 +216,7 @@ We welcome contributions from the Battlefield community! There are many ways to 
 - [ ] Loadout builder
 - [ ] Comparison table view
 
-**Vote on features or suggest new ones in [Discussions](https://github.com/henryabraham52/ttm/discussions)!**
+**Vote on features or suggest new ones in [Discussions](https://github.com/henryabraham52/BF6_TTK/discussions)!**
 
 ## 🐛 Known Issues
 
@@ -224,7 +224,7 @@ We welcome contributions from the Battlefield community! There are many ways to 
 - DPS values may not reflect real-world performance due to recoil
 - No headshot multiplier calculations yet
 
-See the [Issues](https://github.com/henryabraham52/ttm/issues) page for full list and progress.
+See the [Issues](https://github.com/henryabraham52/BF6_TTK/issues) page for full list and progress.
 
 ## 📝 License
 
@@ -239,9 +239,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact & Support
 
-- **Issues & Bugs**: [GitHub Issues](https://github.com/henryabraham52/ttm/issues)
-- **Feature Requests**: [GitHub Discussions](https://github.com/henryabraham52/ttm/discussions)
-- **General Questions**: Open a [Discussion](https://github.com/henryabraham52/ttm/discussions/new)
+- **Issues & Bugs**: [GitHub Issues](https://github.com/henryabraham52/BF6_TTK/issues)
+- **Feature Requests**: [GitHub Discussions](https://github.com/henryabraham52/BF6_TTK/discussions)
+- **General Questions**: Open a [Discussion](https://github.com/henryabraham52/BF6_TTK/discussions/new)
 
 ## ⚠️ Disclaimer
 
@@ -251,7 +251,7 @@ This is a fan-made community project and is **not affiliated with or endorsed by
 
 If you find this project useful, please consider giving it a ⭐ on GitHub!
 
-[![Star History Chart](https://api.star-history.com/svg?repos=henryabraham52/ttm&type=Date)](https://star-history.com/#henryabraham52/ttm&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=henryabraham52/BF6_TTK&type=Date)](https://star-history.com/#henryabraham52/BF6_TTK&Date)
 
 ---
 
