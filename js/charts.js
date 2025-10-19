@@ -47,14 +47,7 @@ function createDamageChart(weapons, containerId = 'mainChart') {
         const colorIndex = weapons.filter(w => w['Weapon Type'] === weapon['Weapon Type']).indexOf(weapon);
         const lineColor = typeColors[colorIndex % typeColors.length];
         
-        // Add tiny random offset to prevent exact overlaps in hover detection
-        const damages = RANGES.map(range => {
-            const baseDamage = weapon[range];
-            if (baseDamage === null || baseDamage === undefined) return baseDamage;
-            // Add a tiny offset (±0.05) to prevent exact overlaps
-            const offset = (Math.random() - 0.5) * 0.1;
-            return baseDamage + offset;
-        });
+        const damages = RANGES.map(range => weapon[range]);
         const rangeLabels = RANGES.map(r => r.replace('M', 'm'));
 
         return {
@@ -62,7 +55,7 @@ function createDamageChart(weapons, containerId = 'mainChart') {
             y: damages,
             type: 'scatter',
             mode: 'lines+markers',
-            name: `${weapon.Weapon}`,
+            name: `${weapon.Weapon} (${weapon['Weapon Type']})`,
             line: {
                 color: lineColor,
                 width: 3,
@@ -74,19 +67,12 @@ function createDamageChart(weapons, containerId = 'mainChart') {
                 line: { width: 1, color: '#000' }
             },
             opacity: 0.8,
-            customdata: RANGES.map(range => ({
-                originalDamage: weapon[range],
-                weaponType: weapon['Weapon Type'],
-                rpm: weapon.RPM,
-                dps: weapon.DPS
-            })),
             hovertemplate:
                 `<b>%{fullData.name}</b><br>` +
-                `Type: %{customdata.weaponType}<br>` +
                 `Range: %{x}<br>` +
-                `Damage: %{customdata.originalDamage}<br>` +
-                `RPM: %{customdata.rpm}<br>` +
-                `DPS: %{customdata.dps}<br>` +
+                `Damage: %{y}<br>` +
+                `RPM: ${formatNumber(weapon.RPM)}<br>` +
+                `DPS: ${formatNumber(weapon.DPS)}<br>` +
                 `<extra></extra>`
         };
     });
@@ -119,7 +105,7 @@ function createDamageChart(weapons, containerId = 'mainChart') {
             traceorder: 'grouped'
         },
         showlegend: weapons.length <= 15,
-        hovermode: 'x',
+        hovermode: 'closest',
         height: 600
     };
 
