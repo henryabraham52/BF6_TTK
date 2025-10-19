@@ -131,10 +131,10 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
         return { ...w, calculatedTTK: ttk };
     });
 
-    // Sort by calculated TTK (ascending - lower is better)
+    // Sort by calculated TTK (ascending - lower is better) and reverse for display
     const sortedWeapons = weaponsWithTTK.sort((a, b) => {
         return (a.calculatedTTK || Infinity) - (b.calculatedTTK || Infinity);
-    });
+    }).reverse();
 
     // Extract TTK values for chart
     const ttksWithADS = sortedWeapons.map(w => w.calculatedTTK);
