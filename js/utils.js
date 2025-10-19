@@ -46,7 +46,12 @@ function isWeaponDataComplete(weapon) {
     const requiredFields = ['Weapon', 'Weapon Type', 'RPM', ...RANGES];
     return requiredFields.every(field => {
         const value = weapon[field];
-        return value !== null && value !== undefined && value !== '';
+        // Consider 0 as valid data (e.g., shotguns with 0 damage at long range)
+        if (field === 'Weapon' || field === 'Weapon Type') {
+            return value !== null && value !== undefined && value !== '';
+        }
+        // For numeric fields, allow 0 but not null/undefined/empty string
+        return value !== null && value !== undefined && value !== '' && !isNaN(parseFloat(value));
     });
 }
 
@@ -61,7 +66,10 @@ function getWeaponTypeColor(weaponType) {
         'CARBINE': '#F7931E',       // Orange
         'SMG': '#FFC857',           // Yellow
         'LMG': '#4ECDC4',           // Teal
-        'DMR': '#95E1D3'            // Light teal
+        'DMR': '#95E1D3',           // Light teal
+        'SNIPER RIFLE': '#8B4A6B',  // Purple
+        'SHOTGUN': '#E74C3C',       // Red
+        'PISTOL': '#9B59B6'         // Violet
     };
     return colorMap[weaponType] || '#CCCCCC';
 }
