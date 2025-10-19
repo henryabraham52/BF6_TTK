@@ -15,6 +15,122 @@ let currentFilters = {
 let isDarkTheme = true; // Default to dark theme
 
 /**
+ * Show loading state
+ */
+function showLoadingState() {
+    const mainChart = document.getElementById('mainChart');
+    if (mainChart) {
+        mainChart.innerHTML = '<div class="loading-indicator">🎯 Loading weapon data...</div>';
+    }
+}
+
+/**
+ * Hide loading state
+ */
+function hideLoadingState() {
+    // Loading state will be replaced by actual charts
+}
+
+/**
+ * Show error message
+ */
+function showError(message) {
+    const mainChart = document.getElementById('mainChart');
+    if (mainChart) {
+        mainChart.innerHTML = `<div class="error-message">❌ Error: ${message}</div>`;
+    }
+    console.error('Application Error:', message);
+}
+
+/**
+ * Initialize charts with default data
+ */
+function initializeCharts(weapons) {
+    const completeWeapons = weapons.filter(isWeaponDataComplete).slice(0, 10);
+    if (completeWeapons.length > 0) {
+        createDamageChart(completeWeapons, 'mainChart');
+        createTTKChart(completeWeapons, '10M', 'ttkChart');
+        createRPMvsDPSChart(completeWeapons, 'dpsChart');
+    }
+}
+
+/**
+ * Get all weapons data
+ */
+function getAllWeapons() {
+    return weaponsData || [];
+}
+
+/**
+ * Get filtered weapon data
+ */
+function getFilteredData() {
+    return applyFilters(currentFilters);
+}
+
+/**
+ * Apply current filters to weapon data
+ */
+function applyFilters(filters) {
+    let filtered = weaponsData || [];
+    
+    // Apply type filter
+    if (filters.types && !filters.types.includes('ALL')) {
+        filtered = filtered.filter(w => filters.types.includes(w['Weapon Type']));
+    }
+    
+    // Apply search filter
+    if (filters.search && filters.search.trim()) {
+        const searchTerm = filters.search.toLowerCase();
+        filtered = filtered.filter(w => 
+            w.Weapon.toLowerCase().includes(searchTerm) ||
+            w['Weapon Type'].toLowerCase().includes(searchTerm)
+        );
+    }
+    
+    return filtered;
+}
+
+/**
+ * Reset all filters to default state
+ */
+function resetFilters() {
+    // This function is called by handleResetFilters - keeping for compatibility
+}
+
+/**
+ * Update chart based on type and data
+ */
+function updateChart(chartType, weapons, options) {
+    const containerId = options.containerId || 'mainChart';
+    const range = options.range || '10M';
+    
+    switch(chartType) {
+        case 'damage':
+            createDamageChart(weapons, containerId);
+            break;
+        case 'ttk':
+            createTTKChart(weapons, range, containerId);
+            break;
+        case 'rpm-dps':
+            createRPMvsDPSChart(weapons, containerId);
+            break;
+        default:
+            createDamageChart(weapons, containerId);
+    }
+}
+
+/**
+ * Clear chart container
+ */
+function clearChart(containerId) {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = '';
+    }
+}
+
+/**
  * Initialize the application
  */
 async function init() {

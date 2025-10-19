@@ -21,6 +21,10 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
 </head>
 <body>
+    <!-- Skip Links -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <a href="#weapon-table" class="skip-link">Skip to weapon table</a>
+    
     <!-- Header -->
     <header>
         <div class="container">
@@ -38,7 +42,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container">
+    <main class="container" id="main-content">
         <!-- Controls Section -->
         <section class="controls-section">
             <h2>Filter & Compare</h2>
@@ -137,7 +141,7 @@
         </section>
 
         <!-- Weapon Details Table -->
-        <section class="table-section">
+        <section class="table-section" id="weapon-table">
             <h2>Weapon Statistics Table</h2>
             <div class="table-controls">
                 <input type="text" id="tableSearch" placeholder="Search weapons..." class="search-input">
@@ -195,7 +199,7 @@
         <section class="methodology-section">
             <h2>📐 How TTK is Calculated</h2>
             <div class="methodology-content">
-                <pre><code>// Time-to-Kill Formula (in milliseconds)
+                <pre><code lang="javascript">// Time-to-Kill Formula (in milliseconds)
 const PLAYER_HEALTH = 100;
 const shotsToKill = Math.ceil(PLAYER_HEALTH / damagePerShot);
 const timeBetweenShots = 60000 / rpm; // Convert RPM to ms

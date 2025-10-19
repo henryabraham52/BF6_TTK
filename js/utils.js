@@ -44,7 +44,7 @@ function calculateShotsToKill(damage) {
  * @returns {boolean} True if all required fields are present
  */
 function isWeaponDataComplete(weapon) {
-    const requiredFields = ['Weapon', 'Weapon Type', 'RPM', ...RANGES];
+    const requiredFields = ['Weapon', 'Weapon Type', 'RPM', 'ADS', ...RANGES];
     return requiredFields.every(field => {
         const value = weapon[field];
         // Consider 0 as valid data (e.g., shotguns with 0 damage at long range)
