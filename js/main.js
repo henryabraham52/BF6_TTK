@@ -46,7 +46,7 @@ function showError(message) {
  * Initialize charts with default data
  */
 function initializeCharts(weapons) {
-    const completeWeapons = weapons.filter(isWeaponDataComplete).slice(0, 10);
+    const completeWeapons = weapons.filter(isWeaponDataComplete);
     if (completeWeapons.length > 0) {
         createDamageChart(completeWeapons, 'mainChart');
         createTTKChart(completeWeapons, '10M', 'ttkChart');
@@ -366,10 +366,17 @@ function handleExportCSV() {
 function updateVisualization() {
     const weapons = applyFilters(currentFilters);
 
-    // Limit to complete weapons for main chart if showing all
-    const displayWeapons = currentFilters.types.includes('ALL')
-        ? weapons.filter(isWeaponDataComplete).slice(0, 15)
-        : weapons;
+    // Show more weapons for damage chart, limit others
+    let displayWeapons = weapons.filter(isWeaponDataComplete);
+    
+    if (currentFilters.types.includes('ALL')) {
+        // For damage chart, show all complete weapons; for others, limit to avoid clutter
+        if (currentFilters.chartType === 'damage') {
+            displayWeapons = displayWeapons; // Show all complete weapons
+        } else {
+            displayWeapons = displayWeapons.slice(0, 20); // Limit other charts
+        }
+    }
 
     const options = {
         containerId: 'mainChart',

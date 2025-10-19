@@ -28,7 +28,25 @@ const CHART_LAYOUT_DEFAULTS = {
  * @param {string} containerId - DOM element ID for chart
  */
 function createDamageChart(weapons, containerId = 'mainChart') {
-    const traces = weapons.map(weapon => {
+    // Group weapons by type for better color organization
+    const weaponTypes = [...new Set(weapons.map(w => w['Weapon Type']))];
+    const colorPalette = {
+        'ASSAULT RIFLE': ['#FF6B35', '#FF8C42', '#FFAD5A', '#FFC65C'],
+        'CARBINE': ['#F7931E', '#FFB347', '#FFA500', '#FF8C00'],
+        'SMG': ['#FFC857', '#FFD700', '#FFED4A', '#FFEB3B'],
+        'LMG': ['#4ECDC4', '#26A69A', '#00ACC1', '#0097A7'],
+        'DMR': ['#95E1D3', '#4DB6AC', '#26A69A', '#00897B'],
+        'SNIPER RIFLE': ['#8B4A6B', '#AD6BAD', '#C47AC0', '#D8A2D8'],
+        'SHOTGUN': ['#E74C3C', '#EC7063', '#F1948A', '#F5B7B1'],
+        'PISTOL': ['#9B59B6', '#BB8FCE', '#D2B4DE', '#E8DAEF']
+    };
+    
+    const traces = weapons.map((weapon, index) => {
+        const weaponTypeIndex = weaponTypes.indexOf(weapon['Weapon Type']);
+        const typeColors = colorPalette[weapon['Weapon Type']] || ['#CCCCCC'];
+        const colorIndex = weapons.filter(w => w['Weapon Type'] === weapon['Weapon Type']).indexOf(weapon);
+        const lineColor = typeColors[colorIndex % typeColors.length];
+        
         const damages = RANGES.map(range => weapon[range]);
         const rangeLabels = RANGES.map(r => r.replace('M', 'm'));
 
@@ -37,21 +55,24 @@ function createDamageChart(weapons, containerId = 'mainChart') {
             y: damages,
             type: 'scatter',
             mode: 'lines+markers',
-            name: weapon.Weapon,
+            name: `${weapon.Weapon} (${weapon['Weapon Type']})`,
             line: {
-                color: getWeaponTypeColor(weapon['Weapon Type']),
-                width: 2
+                color: lineColor,
+                width: 3,
+                dash: weapon['Weapon Type'] === 'SNIPER RIFLE' ? 'dash' : 'solid'
             },
             marker: {
-                size: 8,
-                line: { width: 2, color: '#fff' }
+                size: 6,
+                color: lineColor,
+                line: { width: 1, color: '#000' }
             },
+            opacity: 0.8,
             hovertemplate:
-                `<b>${weapon.Weapon}</b><br>` +
-                `Type: ${weapon['Weapon Type']}<br>` +
+                `<b>%{fullData.name}</b><br>` +
                 `Range: %{x}<br>` +
                 `Damage: %{y}<br>` +
                 `RPM: ${formatNumber(weapon.RPM)}<br>` +
+                `DPS: ${formatNumber(weapon.DPS)}<br>` +
                 `<extra></extra>`
         };
     });
@@ -59,7 +80,7 @@ function createDamageChart(weapons, containerId = 'mainChart') {
     const layout = {
         ...CHART_LAYOUT_DEFAULTS,
         title: {
-            text: 'Weapon Damage vs Range',
+            text: `Weapon Damage vs Range (${weapons.length} weapons)`,
             font: { size: 20, color: '#fff' }
         },
         xaxis: {
@@ -70,15 +91,22 @@ function createDamageChart(weapons, containerId = 'mainChart') {
         yaxis: {
             title: 'Damage per Shot',
             gridcolor: '#333',
-            color: '#ccc'
+            color: '#ccc',
+            range: [0, Math.max(...weapons.flatMap(w => RANGES.map(r => w[r] || 0))) * 1.1]
         },
         legend: {
             orientation: 'v',
-            x: 1.02,
+            x: 1.01,
             y: 1,
-            font: { color: '#ccc' }
+            font: { color: '#ccc', size: 10 },
+            bgcolor: 'rgba(26, 26, 26, 0.8)',
+            bordercolor: '#333',
+            borderwidth: 1,
+            traceorder: 'grouped'
         },
-        showlegend: true
+        showlegend: weapons.length <= 15,
+        hovermode: 'closest',
+        height: 600
     };
 
     Plotly.newPlot(containerId, traces, layout, CHART_CONFIG);
