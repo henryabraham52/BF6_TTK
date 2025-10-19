@@ -30,7 +30,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 #### Finding Weapons to Add
 
 1. Check the live site for weapons marked as "Incomplete"
-2. Look at [open issues](https://github.com/yourusername/ttm/issues?q=is%3Aissue+is%3Aopen+label%3A%22data+needed%22) with the `data needed` label
+2. Look at [open issues](https://github.com/henryabraham52/BF6_TTK/issues?q=is%3Aissue+is%3Aopen+label%3A%22data+needed%22) with the `data needed` label
 3. Review `data/ttk.csv` for empty fields
 
 #### How to Add Weapon Data
@@ -44,7 +44,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 **Method 2: Issue Report (If you don't want to edit files)**
 
-1. [Create a new issue](https://github.com/yourusername/ttm/issues/new)
+1. [Create a new issue](https://github.com/henryabraham52/BF6_TTK/issues/new)
 2. Use the title format: "Weapon Data: [Weapon Name]"
 3. Include all available stats in the issue body
 
@@ -99,7 +99,7 @@ Found a bug? Help us fix it!
 
 #### Submitting a Bug Report
 
-Use our [Bug Report Template](https://github.com/yourusername/ttm/issues/new?template=bug_report.md)
+Use our [Bug Report Template](https://github.com/henryabraham52/BF6_TTK/issues/new?template=bug_report.yml)
 
 **Include:**
 - Clear, descriptive title
@@ -129,13 +129,13 @@ We love new ideas! 💡
 
 #### Before Suggesting
 
-1. Check [existing feature requests](https://github.com/yourusername/ttm/labels/enhancement)
+1. Check [existing feature requests](https://github.com/henryabraham52/BF6_TTK/labels/enhancement)
 2. Review the [roadmap in README.md](README.md#features-roadmap)
 3. Consider if it aligns with the project's scope
 
 #### Submitting a Feature Request
 
-Use our [Feature Request Template](https://github.com/yourusername/ttm/issues/new?template=feature_request.md)
+Use our [Feature Request Template](https://github.com/henryabraham52/BF6_TTK/issues/new?template=feature_request.yml)
 
 **Include:**
 - Clear description of the feature
@@ -184,8 +184,8 @@ No complex setup required! Just:
 
 1. **Fork & Clone**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/ttm.git
-   cd ttm
+   git clone https://github.com/YOUR_USERNAME/BF6_TTK.git
+   cd BF6_TTK
    ```
 
 2. **Start Local Server**
