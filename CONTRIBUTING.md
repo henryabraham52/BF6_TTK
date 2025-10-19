@@ -426,8 +426,8 @@ Before submitting, verify:
 
 ## ❓ Questions?
 
-- **General Questions**: [Start a Discussion](https://github.com/yourusername/ttm/discussions/new)
-- **Report Issues**: [Create an Issue](https://github.com/yourusername/ttm/issues/new)
+- **General Questions**: [Start a Discussion](https://github.com/henryabraham52/BF6_TTK/discussions/new)
+- **Report Issues**: [Create an Issue](https://github.com/henryabraham52/BF6_TTK/issues/new)
 - **Unclear Guidelines**: Open an issue to improve this document!
 
 ## 🎖️ Recognition
