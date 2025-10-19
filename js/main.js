@@ -110,12 +110,22 @@ function handleFilterChange(event) {
     const selectedOptions = Array.from(event.target.selectedOptions);
     const selectedTypes = selectedOptions.map(opt => opt.value);
 
-    // If "All Weapons" is selected with others, keep only "All"
+    // If "All Weapons" is selected with specific types, deselect "All"
     if (selectedTypes.includes('ALL') && selectedTypes.length > 1) {
-        event.target.value = 'ALL';
-        currentFilters.types = ['ALL'];
+        // Remove "All" selection, keep specific types
+        const specificTypes = selectedTypes.filter(type => type !== 'ALL');
+        currentFilters.types = specificTypes;
+        
+        // Update UI to reflect the change
+        Array.from(event.target.options).forEach(option => {
+            if (option.value === 'ALL') {
+                option.selected = false;
+            }
+        });
     } else if (selectedTypes.length === 0) {
+        // If nothing selected, default to "All"
         currentFilters.types = ['ALL'];
+        event.target.querySelector('option[value="ALL"]').selected = true;
     } else {
         currentFilters.types = selectedTypes;
     }
@@ -155,7 +165,10 @@ function handleResetFilters() {
     // Reset UI controls
     const typeFilter = document.getElementById('weaponTypeFilter');
     if (typeFilter) {
-        typeFilter.value = 'ALL';
+        // Clear all selections first
+        Array.from(typeFilter.options).forEach(option => {
+            option.selected = option.value === 'ALL';
+        });
     }
 
     const rangeSelector = document.getElementById('rangeSelector');
