@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Interactive Time-to-Kill (TTK) visualization for Battlefield 6 weapons. Compare weapon stats, damage drop-off, and optimal ranges.">
+    <meta name="keywords" content="Battlefield 6, TTK, Time to Kill, weapon stats, damage, DPS">
+    <meta name="author" content="Battlefield Community">
+    <title>Battlefield 6 - TTK Visualization</title>
+
+    <!-- Plotly.js CDN -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js" charset="utf-8"></script>
+
+    <!-- Papa Parse for CSV parsing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <h1>🎯 Battlefield 6 - Time-to-Kill Analysis</h1>
+            <p class="subtitle">Interactive weapon statistics and damage visualization</p>
+            <div class="header-actions">
+                <button id="themeToggle" class="btn-secondary" aria-label="Toggle dark/light theme">
+                    <span class="theme-icon">🌙</span> Toggle Theme
+                </button>
+                <a href="https://github.com/henryabraham52/ttm" target="_blank" rel="noopener" class="btn-secondary">
+                    📁 View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Controls Section -->
+        <section class="controls-section">
+            <h2>Filter & Compare</h2>
+            <div class="controls-grid">
+                <div class="control-group">
+                    <label for="weaponTypeFilter">Weapon Type:</label>
+                    <select id="weaponTypeFilter" multiple size="6">
+                        <option value="ALL" selected>All Weapons</option>
+                        <option value="ASSAULT RIFLE">Assault Rifles</option>
+                        <option value="CARBINE">Carbines</option>
+                        <option value="SMG">SMGs</option>
+                        <option value="LMG">LMGs</option>
+                        <option value="DMR">DMRs</option>
+                    </select>
+                    <small>Hold Ctrl/Cmd to select multiple</small>
+                </div>
+
+                <div class="control-group">
+                    <label for="rangeSelector">Focus Range:</label>
+                    <select id="rangeSelector">
+                        <option value="all" selected>All Ranges</option>
+                        <option value="10M">10M (Close)</option>
+                        <option value="20M">20M (Close-Mid)</option>
+                        <option value="35M">35M (Mid)</option>
+                        <option value="50M">50M (Mid-Long)</option>
+                        <option value="70M">70M (Long)</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label for="chartType">Chart View:</label>
+                    <select id="chartType">
+                        <option value="damage" selected>Damage vs Range</option>
+                        <option value="ttk">TTK Comparison</option>
+                        <option value="rpm-dps">RPM vs DPS</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <button id="resetFilters" class="btn-primary">Reset Filters</button>
+                    <button id="compareAll" class="btn-secondary">Compare All</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Summary -->
+        <section class="stats-summary" id="statsSummary">
+            <div class="stat-card">
+                <span class="stat-label">Total Weapons</span>
+                <span class="stat-value" id="totalWeapons">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Complete Data</span>
+                <span class="stat-value" id="completeWeapons">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Weapon Types</span>
+                <span class="stat-value" id="weaponTypes">-</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Data Coverage</span>
+                <span class="stat-value" id="dataCoverage">-</span>
+            </div>
+        </section>
+
+        <!-- Main Chart -->
+        <section class="chart-section">
+            <div id="mainChart" class="chart-container"></div>
+            <div class="chart-info">
+                <p><strong>Note:</strong> Some weapons have incomplete data. Missing stats are shown as gaps in the visualization.</p>
+            </div>
+        </section>
+
+        <!-- Secondary Charts Grid -->
+        <section class="charts-grid">
+            <div class="chart-box">
+                <h3>TTK by Range</h3>
+                <div id="ttkChart" class="chart-container-small"></div>
+            </div>
+            <div class="chart-box">
+                <h3>DPS Comparison</h3>
+                <div id="dpsChart" class="chart-container-small"></div>
+            </div>
+        </section>
+
+        <!-- Weapon Details Table -->
+        <section class="table-section">
+            <h2>Weapon Statistics Table</h2>
+            <div class="table-controls">
+                <input type="text" id="tableSearch" placeholder="Search weapons..." class="search-input">
+                <button id="exportCSV" class="btn-secondary">📊 Export Data</button>
+            </div>
+            <div class="table-wrapper">
+                <table id="weaponTable">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Weapon</th>
+                            <th>10M</th>
+                            <th>20M</th>
+                            <th>35M</th>
+                            <th>50M</th>
+                            <th>70M</th>
+                            <th>RPM</th>
+                            <th>DPS</th>
+                            <th>TTK (10M)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weaponTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Contributing Section -->
+        <section class="contribute-section">
+            <h2>🤝 Contribute to This Project</h2>
+            <p>This is a community-driven project! Help us complete the weapon statistics database.</p>
+            <div class="contribute-grid">
+                <div class="contribute-card">
+                    <h3>📝 Add Weapon Data</h3>
+                    <p>Missing stats for a weapon? Submit the data via GitHub!</p>
+                    <a href="https://github.com/henryabraham52/ttm/blob/main/CONTRIBUTING.md" class="btn-primary">See Guidelines</a>
+                </div>
+                <div class="contribute-card">
+                    <h3>🐛 Report Issues</h3>
+                    <p>Found incorrect data or bugs?</p>
+                    <a href="https://github.com/henryabraham52/ttm/issues/new?template=bug_report.md" class="btn-primary">Report Bug</a>
+                </div>
+                <div class="contribute-card">
+                    <h3>💡 Request Features</h3>
+                    <p>Have ideas for new visualizations?</p>
+                    <a href="https://github.com/henryabraham52/ttm/issues/new?template=feature_request.md" class="btn-primary">Suggest Feature</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Methodology Section -->
+        <section class="methodology-section">
+            <h2>📐 How TTK is Calculated</h2>
+            <div class="methodology-content">
+                <pre><code>// Time-to-Kill Formula (in milliseconds)
+const PLAYER_HEALTH = 100;
+const shotsToKill = Math.ceil(PLAYER_HEALTH / damagePerShot);
+const timeBetweenShots = 60000 / rpm; // Convert RPM to ms
+const ttk = (shotsToKill - 1) * timeBetweenShots;
+
+// Example: M433 at 10M
+// Damage: 25, RPM: 830
+// Shots to kill: ceil(100/25) = 4
+// Time between shots: 60000/830 = 72.3ms
+// TTK: (4-1) * 72.3 = 216.9ms</code></pre>
+                <p><strong>Assumptions:</strong></p>
+                <ul>
+                    <li>Player health: 100 HP</li>
+                    <li>All body shots (no headshot multipliers)</li>
+                    <li>No armor or damage reduction</li>
+                    <li>Perfect accuracy (all shots hit)</li>
+                    <li>No bullet velocity or drop considerations</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Battlefield Community |
+                <a href="https://github.com/yourusername/ttm/blob/main/LICENSE">MIT License</a> |
+                <a href="https://github.com/yourusername/ttm">GitHub Repository</a> |
+                <a href="https://github.com/yourusername/ttm/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>
+            </p>
+            <p class="disclaimer">This is a fan-made project and is not affiliated with EA or DICE.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Modules -->
+    <script src="js/utils.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

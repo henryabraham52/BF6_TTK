@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir css js data .github)",
+      "Bash(mkdir .githubISSUE_TEMPLATE)",
+      "Bash(move ttk.csv datattk.csv)",
+      "Bash(mv ttk.csv data/ttk.csv)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
