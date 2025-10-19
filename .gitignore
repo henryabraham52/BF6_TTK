@@ -78,6 +78,10 @@ $RECYCLE.BIN/
 config.local.js
 *.local
 
+# Local data files (not for commit)
+moredata.csv
+moredata.*
+
 # Test files (if added later)
 test-results/
 playwright-report/
