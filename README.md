@@ -6,7 +6,7 @@
 
 An interactive web-based visualization tool for analyzing Battlefield 6 weapon statistics, focusing on Time-to-Kill (TTK) metrics across different ranges and weapon types.
 
-![Screenshot](https://via.placeholder.com/800x400?text=Add+Your+Screenshot+Here)
+![BF6 TTK Visualization Screenshot](screenshot.png)
 
 ## 🌟 Features
 
