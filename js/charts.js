@@ -96,14 +96,20 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
         w[range] !== null && w.RPM !== null
     );
 
-    // Sort by TTK (ascending - lower is better)
-    const sortedWeapons = sortWeapons(validWeapons, 'ttk', range);
-
-    // Calculate TTK with current ADS mode
-    const ttksWithADS = sortedWeapons.map(w => {
+    // Calculate TTK with current ADS mode for each weapon
+    const weaponsWithTTK = validWeapons.map(w => {
         const adsTime = (currentFilters && currentFilters.includeADS) ? w.ADS : 0;
-        return calculateTTK(w[range], w.RPM, adsTime);
+        const ttk = calculateTTK(w[range], w.RPM, adsTime);
+        return { ...w, calculatedTTK: ttk };
     });
+
+    // Sort by calculated TTK (ascending - lower is better)
+    const sortedWeapons = weaponsWithTTK.sort((a, b) => {
+        return (a.calculatedTTK || Infinity) - (b.calculatedTTK || Infinity);
+    });
+
+    // Extract TTK values for chart
+    const ttksWithADS = sortedWeapons.map(w => w.calculatedTTK);
 
     const trace = {
         x: ttksWithADS,
