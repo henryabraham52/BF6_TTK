@@ -23,7 +23,9 @@ function calculateTTK(damage, rpm, adsTime = 0) {
     const timeBetweenShots = 60000 / rpm; // Convert RPM to milliseconds
     const ttk = (shotsToKill - 1) * timeBetweenShots + (adsTime || 0);
 
-    return Math.round(ttk * 10) / 10; // Round to 1 decimal place
+    // Prevent 0ms TTK for instant kills - use 1ms minimum for sorting
+    const finalTTK = Math.round(ttk * 10) / 10;
+    return finalTTK === 0 ? 1 : finalTTK;
 }
 
 /**
