@@ -9,7 +9,7 @@ let currentFilters = {
     range: 'all',
     chartType: 'damage',
     search: '',
-    includeADS: false
+    method: 'hip'
 };
 
 let isDarkTheme = true; // Default to dark theme
@@ -278,7 +278,7 @@ function handleResetFilters() {
         range: 'all',
         chartType: 'damage',
         search: '',
-        includeADS: false
+        method: 'hip'
     };
 
     // Reset UI controls
@@ -376,7 +376,7 @@ function handleTableSearch(event) {
  * Handle fire mode change (Hip Fire vs ADS)
  */
 function handleFireModeChange(event) {
-    currentFilters.includeADS = event.target.value === 'ads';
+    currentFilters.method = event.target.value; // 'hip' | 'ads' | 'recoil'
     updateVisualization();
     populateWeaponTable(applyFilters(currentFilters));
 }
@@ -479,11 +479,19 @@ function populateWeaponTable(weapons) {
             row.classList.add('incomplete-data');
         }
 
-        // Calculate TTK with current ADS mode
-        const adsTime = currentFilters.includeADS ? weapon.ADS : 0;
-        const ttk10M = weapon['10M'] && weapon.RPM
-            ? `${calculateTTK(weapon['10M'], weapon.RPM, adsTime)}ms`
-            : 'N/A';
+        // Calculate TTK based on selected method
+        const method = (currentFilters && currentFilters.method) || 'hip';
+        let ttk10M;
+        if (weapon['10M'] && weapon.RPM) {
+            if (method === 'recoil') {
+                ttk10M = `${calculateRecoilAdjustedTTK(weapon['10M'], weapon.RPM, weapon.Precision, weapon.Control, '10M')}ms`;
+            } else {
+                const adsTime = method === 'ads' ? weapon.ADS : 0;
+                ttk10M = `${calculateTTK(weapon['10M'], weapon.RPM, adsTime)}ms`;
+            }
+        } else {
+            ttk10M = 'N/A';
+        }
         const status = weapon.isComplete
             ? '<span class="status-badge complete">Complete</span>'
             : '<span class="status-badge incomplete">Incomplete</span>';

@@ -8,6 +8,22 @@ const PLAYER_HEALTH = 100;
 const RANGES = ['10M', '20M', '35M', '50M', '70M'];
 
 /**
+ * Get accuracy multiplier by range (to reduce hit chance at distance)
+ * @param {string} range - e.g., '10M'
+ * @returns {number} multiplier in [0,1]
+ */
+function getRangeAccuracyMultiplier(range) {
+    const map = {
+        '10M': 1.0,
+        '20M': 0.95,
+        '35M': 0.9,
+        '50M': 0.85,
+        '70M': 0.8
+    };
+    return map[range] != null ? map[range] : 1.0;
+}
+
+/**
  * Calculate Time-to-Kill in milliseconds
  * @param {number} damage - Damage per shot
  * @param {number} rpm - Rounds per minute
@@ -24,6 +40,37 @@ function calculateTTK(damage, rpm, adsTime = 0) {
     const ttk = (shotsToKill - 1) * timeBetweenShots + (adsTime || 0);
 
     // Prevent 0ms TTK for instant kills - use 1ms minimum for sorting
+    const finalTTK = Math.round(ttk * 10) / 10;
+    return finalTTK === 0 ? 1 : finalTTK;
+}
+
+/**
+ * Calculate recoil-adjusted TTK using weapon precision/control and range degradation.
+ * ADS time is ignored for this method.
+ * @param {number} damage
+ * @param {number} rpm
+ * @param {number} precision - 0..100
+ * @param {number} control - 0..100
+ * @param {string} range - one of RANGES
+ * @returns {number|null}
+ */
+function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100, range = '10M') {
+    if (!damage || !rpm || damage <= 0 || rpm <= 0) {
+        return null;
+    }
+
+    const requiredHits = Math.ceil(PLAYER_HEALTH / damage);
+
+    let hitPct = (Number(precision) / 100) * (Number(control) / 100); // probability 0..1
+    const rangeMult = getRangeAccuracyMultiplier(range);
+    hitPct = hitPct * rangeMult;
+
+    // Clamp probability to reasonable bounds
+    const p = Math.min(1, Math.max(0.05, hitPct));
+
+    const expectedShots = Math.ceil(requiredHits / p);
+    const timeBetweenShots = 60000 / rpm;
+    const ttk = (expectedShots - 1) * timeBetweenShots; // no ADS
     const finalTTK = Math.round(ttk * 10) / 10;
     return finalTTK === 0 ? 1 : finalTTK;
 }
@@ -312,6 +359,8 @@ if (typeof module !== 'undefined' && module.exports) {
         exportToCSV,
         downloadCSV,
         getWeaponStatistics,
-        debounce
+        debounce,
+        getRangeAccuracyMultiplier,
+        calculateRecoilAdjustedTTK
     };
 }

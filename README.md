@@ -156,7 +156,7 @@ CARBINE,M4A1,21,21,18,17,17,900,18900
 
 | Field | Description |
 |-------|-------------|
-| `Weapon Type` | Category (Assault Rifle, Carbine, SMG, LMG, DMR) |
+| `Weapon Type` | Category (Assault Rifle, Carbine, SMG, LMG, DMR, Sniper Rifle, Shotgun, Pistol) |
 | `Weapon` | Weapon name |
 | `10M - 70M` | Damage at specific ranges |
 | `RPM` | Rounds per minute (fire rate) |
@@ -188,12 +188,12 @@ We welcome contributions from the Battlefield community! There are many ways to 
 ## 📈 Current Data Status
 
 | Status | Count | Percentage |
-|--------|-------|------------|
-| ✅ Complete Weapons | 24 | 70% |
-| ⚠️ Incomplete Weapons | 10 | 30% |
-| **Total** | **34** | **100%** |
+|--------|-------|-----------|
+| ✅ Complete Weapons | 45 | 100% |
+| ⚠️ Incomplete Weapons | 0 | 0% |
+| **Total** | **45** | **100%** |
 
-**Help us reach 100% completion!** Check the [Issues](https://github.com/henryabraham52/BF6_TTK/issues) tab for weapons needing data.
+**🎉 All weapons now have complete data!** The database includes all weapon types with full statistics across all ranges.
 
 ## 🎨 Features Roadmap
 
@@ -220,9 +220,9 @@ We welcome contributions from the Battlefield community! There are many ways to 
 
 ## 🐛 Known Issues
 
-- Some weapons have incomplete data (marked in table)
 - DPS values may not reflect real-world performance due to recoil
 - No headshot multiplier calculations yet
+- TTK calculations assume perfect accuracy (all shots hit)
 
 See the [Issues](https://github.com/henryabraham52/BF6_TTK/issues) page for full list and progress.
 

@@ -124,10 +124,18 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
         w[range] !== null && w.RPM !== null
     );
 
-    // Calculate TTK with current ADS mode for each weapon
+    // Calculate TTK for each weapon based on selected method
     const weaponsWithTTK = validWeapons.map(w => {
-        const adsTime = (currentFilters && currentFilters.includeADS) ? w.ADS : 0;
-        const ttk = calculateTTK(w[range], w.RPM, adsTime);
+        const method = (currentFilters && currentFilters.method)
+            ? currentFilters.method
+            : ((currentFilters && currentFilters.includeADS) ? 'ads' : 'hip');
+        let ttk;
+        if (method === 'recoil') {
+            ttk = calculateRecoilAdjustedTTK(w[range], w.RPM, w.Precision, w.Control, range);
+        } else {
+            const adsTime = method === 'ads' ? w.ADS : 0;
+            ttk = calculateTTK(w[range], w.RPM, adsTime);
+        }
         return { ...w, calculatedTTK: ttk };
     });
 
@@ -138,6 +146,11 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
 
     // Extract TTK values for chart
     const ttksWithADS = sortedWeapons.map(w => w.calculatedTTK);
+
+    const method = (currentFilters && currentFilters.method)
+        ? currentFilters.method
+        : ((currentFilters && currentFilters.includeADS) ? 'ads' : 'hip');
+    const methodLabel = method === 'ads' ? 'ADS' : (method === 'recoil' ? 'Recoil Adjusted' : 'Hip Fire');
 
     const trace = {
         x: ttksWithADS,
@@ -151,14 +164,14 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
         hovertemplate:
             `<b>%{y}</b><br>` +
             `TTK: %{x}ms<br>` +
-            `Mode: ${(currentFilters && currentFilters.includeADS) ? 'ADS' : 'Hip Fire'}<br>` +
+            `Method: ${methodLabel}<br>` +
             `<extra></extra>`
     };
 
     const layout = {
         ...CHART_LAYOUT_DEFAULTS,
         title: {
-            text: `Time-to-Kill at ${range} (${(currentFilters && currentFilters.includeADS) ? 'ADS Mode' : 'Hip Fire'})`,
+            text: `Time-to-Kill at ${range} (${methodLabel})`,
             font: { size: 16, color: '#fff' }
         },
         xaxis: {
