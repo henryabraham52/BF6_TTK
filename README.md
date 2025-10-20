@@ -71,7 +71,7 @@ p_{\text{range}} &= \begin{cases}
  p_{\text{base}}\cdot m(r), & r\in\{20,35,50,70\}\text{m},\; m=\{0.95,0.90,0.85,0.80\}
 \end{cases} \\
 \alpha &= \tfrac{i}{4},\; i\in\{1,2,3,4,5\}\;\text{(impact level, default }i=4\text{)} \\
-p &= 1 - \bigl(1 - p_{\text{range}}\bigr)\,\alpha,\quad p\leftarrow\operatorname{clip}(p,\,0.05,\,1.0) \\
+p &= \min\{1.0,\; \max\{0.05,\; 1 - (1 - p_{\text{range}})\,\alpha\}\} \\
 \text{expectedShots} &= \tfrac{S}{p} \\
 \text{TTK}_{\text{ms}} &= \bigl(\text{expectedShots} - 1\bigr)\cdot \tfrac{60000}{\text{RPM}}
 \end{aligned}
