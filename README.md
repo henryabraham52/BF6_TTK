@@ -60,7 +60,7 @@ const ttk = (shotsToKill - 1) * timeBetweenShots;
 
 #### Recoil Adjusted — formula and methodology
 
-TL;DR: Miss chance inflates TTK
+TL;DR: Based on gun stats and range
 
 $$
 \begin{aligned}
