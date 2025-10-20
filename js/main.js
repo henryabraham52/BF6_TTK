@@ -9,7 +9,8 @@ let currentFilters = {
     range: 'all',
     chartType: 'damage',
     search: '',
-    method: 'hip'
+    method: 'hip',
+    recoilImpact: 4
 };
 
 let isDarkTheme = true; // Default to dark theme
@@ -220,6 +221,12 @@ function setupEventListeners() {
     if (fireMode) {
         fireMode.addEventListener('change', handleFireModeChange);
     }
+
+    // Recoil impact slider
+    const recoilImpact = document.getElementById('recoilImpact');
+    if (recoilImpact) {
+        recoilImpact.addEventListener('input', handleRecoilImpactChange);
+    }
 }
 
 /**
@@ -278,7 +285,8 @@ function handleResetFilters() {
         range: 'all',
         chartType: 'damage',
         search: '',
-        method: 'hip'
+        method: 'hip',
+        recoilImpact: 4
     };
 
     // Reset UI controls
@@ -308,6 +316,16 @@ function handleResetFilters() {
     const fireMode = document.getElementById('fireMode');
     if (fireMode) {
         fireMode.value = 'hip';
+    }
+
+    const recoilImpact = document.getElementById('recoilImpact');
+    if (recoilImpact) {
+        recoilImpact.value = '4';
+    }
+
+    const recoilGroup = document.getElementById('recoilImpactGroup');
+    if (recoilGroup) {
+        recoilGroup.style.display = 'none';
     }
 
     // Update visualization
@@ -343,6 +361,16 @@ function applyDefaultFilterState() {
         fireMode.value = 'hip';
     }
 
+    const recoilImpact = document.getElementById('recoilImpact');
+    if (recoilImpact) {
+        recoilImpact.value = '4';
+    }
+
+    const recoilGroup = document.getElementById('recoilImpactGroup');
+    if (recoilGroup) {
+        recoilGroup.style.display = 'none';
+    }
+
     const tableSearch = document.getElementById('tableSearch');
     if (tableSearch) {
         tableSearch.value = '';
@@ -373,10 +401,27 @@ function handleTableSearch(event) {
 }
 
 /**
+ * Handle recoil impact slider
+ */
+function handleRecoilImpactChange(event) {
+    const value = parseInt(event.target.value, 10);
+    currentFilters.recoilImpact = isNaN(value) ? 4 : value;
+    updateVisualization();
+    populateWeaponTable(applyFilters(currentFilters));
+}
+
+/**
  * Handle fire mode change (Hip Fire vs ADS)
  */
 function handleFireModeChange(event) {
     currentFilters.method = event.target.value; // 'hip' | 'ads' | 'recoil'
+
+    // Toggle visibility of recoil impact slider
+    const group = document.getElementById('recoilImpactGroup');
+    if (group) {
+        group.style.display = currentFilters.method === 'recoil' ? 'block' : 'none';
+    }
+
     updateVisualization();
     populateWeaponTable(applyFilters(currentFilters));
 }
@@ -484,7 +529,7 @@ function populateWeaponTable(weapons) {
         let ttk10M;
         if (weapon['10M'] && weapon.RPM) {
             if (method === 'recoil') {
-                ttk10M = `${calculateRecoilAdjustedTTK(weapon['10M'], weapon.RPM, weapon.Precision, weapon.Control, '10M', weapon['Weapon Type'])}ms`;
+                ttk10M = `${calculateRecoilAdjustedTTK(weapon['10M'], weapon.RPM, weapon.Precision, weapon.Control, '10M', weapon['Weapon Type'], currentFilters.recoilImpact)}ms`;
             } else {
                 const adsTime = method === 'ads' ? weapon.ADS : 0;
                 ttk10M = `${calculateTTK(weapon['10M'], weapon.RPM, adsTime)}ms`;
