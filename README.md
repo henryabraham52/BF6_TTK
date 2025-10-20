@@ -17,7 +17,8 @@ An interactive web-based visualization tool for analyzing Battlefield 6 weapon s
 - **📱 Responsive Design** - Works seamlessly on desktop, tablet, and mobile
 - **💾 Data Export** - Download filtered data as CSV
 - **🔎 Advanced Filtering** - Filter by weapon type, range, and search terms
-- **📏 TTK Calculator** - Automatic Time-to-Kill calculations based on damage and RPM
+- **📏 TTK Calculator** - Hip/ADS/Recoil methods with automatic TTK calculations
+- **🎯 Recoil Modeling** - Optional Recoil Adjusted method with configurable impact slider (1–5)
 
 ## 🚀 Live Demo
 
@@ -56,6 +57,16 @@ const ttk = (shotsToKill - 1) * timeBetweenShots;
 - Shots to kill: ceil(100/25) = 4
 - Time between shots: 60000/830 = 72.3ms
 - **TTK: (4-1) × 72.3 = 216.9ms**
+
+#### Recoil Adjusted Method
+- Uses hipfire (no ADS time) and models misses from recoil/precision.
+- Hit_Percentage_base = (Precision/100) × (Control/100)
+- Distance penalty: 10m=1.0 (min 0.9 floor), 20m=0.95, 35m=0.9, 50m=0.85, 70m=0.8
+- Impact slider (1–5, default 4) scales penalty: hitPct = 1 - (1 - base×rangeMult) × (impact/4)
+- Probability clamp: p ∈ [0.05, 1]
+- Expected shots: ceil(ShotsToKill / p)
+- TTK = (ExpectedShots - 1) × (60000 / RPM)
+- Sniper Rifles and Shotguns are immune (assume all shots land)
 
 ## 📁 Project Structure
 
@@ -144,6 +155,10 @@ No installation required! This is a static website that runs entirely in the bro
 
 ## 📊 Data Structure
 
+### Controls
+- Method: Hip Fire, ADS, Recoil Adjusted
+- Recoil Impact slider (1–5) appears when Recoil Adjusted is selected (default 4)
+
 The weapon data is stored in `data/ttk.csv`:
 
 ```csv
@@ -164,6 +179,10 @@ CARBINE,M4A1,21,21,18,17,17,900,315,200,25,40
 | `ADS` | Aim down sights time (milliseconds) |
 | `Precision` | Hipfire precision score (0–100) |
 | `Control` | Recoil control score (0–100) |
+
+Notes:
+- Recoil Adjusted calculations use hipfire only (ignore ADS time).
+- Sniper Rifles and Shotguns always assume full hit rate in Recoil Adjusted mode.
 
 ## 🤝 Contributing
 
@@ -225,7 +244,7 @@ We welcome contributions from the Battlefield community! There are many ways to 
 
 - DPS values may not reflect real-world performance due to recoil
 - No headshot multiplier calculations yet
-- TTK calculations assume perfect accuracy (all shots hit)
+- Hip/ADS methods assume perfect accuracy; Recoil Adjusted is a simplified expected-value model
 
 See the [Issues](https://github.com/henryabraham52/BF6_TTK/issues) page for full list and progress.
 
