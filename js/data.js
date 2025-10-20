@@ -69,7 +69,7 @@ function processWeaponData(rawData) {
                 '70M': parseNumeric(row['70M']),
                 'RPM': parseNumeric(row['RPM']),
                 'DPS': parseNumeric(row['DPS']),
-'ADS': parseNumeric(row['ADS']),
+                'ADS': parseNumeric(row['ADS']),
                 'Precision': parseNumeric(row['Precision']),
                 'Control': parseNumeric(row['Control'])
             };
@@ -77,6 +77,13 @@ function processWeaponData(rawData) {
             // Default Precision/Control if missing
             if (weapon.Precision == null) weapon.Precision = 100;
             if (weapon.Control == null) weapon.Control = 100;
+
+            // Normalize damage values: exact 33 becomes 33.5 across ranges
+            RANGES.forEach(range => {
+                if (weapon[range] === 33) {
+                    weapon[range] = 33.5;
+                }
+            });
 
             // Calculate TTK for each range
             RANGES.forEach(range => {
