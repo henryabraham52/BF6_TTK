@@ -60,6 +60,8 @@ const ttk = (shotsToKill - 1) * timeBetweenShots;
 
 #### Recoil Adjusted — formula and methodology
 
+TL;DR: Miss chance inflates TTK
+
 $$
 \begin{aligned}
 H &= 100 \,\text{(health)} \\
