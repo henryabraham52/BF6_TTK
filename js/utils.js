@@ -54,7 +54,7 @@ function calculateTTK(damage, rpm, adsTime = 0) {
  * @param {string} range - one of RANGES
  * @returns {number|null}
  */
-function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100, range = '10M', weaponType = '') {
+function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100, range = '10M', weaponType = '', impactLevel = 4) {
     if (!damage || !rpm || damage <= 0 || rpm <= 0) {
         return null;
     }
@@ -74,6 +74,10 @@ function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100,
     const rangeMult = getRangeAccuracyMultiplier(range);
     hitPct = hitPct * rangeMult;
 
+    // Apply impact scaling (4 = baseline behavior)
+    const scale = (Number(impactLevel) || 4) / 4; // 1..5 -> 0.25..1.25
+    hitPct = 1 - (1 - hitPct) * scale;
+
     // Minimal penalty at 10m: floor at 0.9
     if (range === '10M') {
         hitPct = Math.max(hitPct, 0.9);
@@ -82,7 +86,8 @@ function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100,
     // Clamp probability to reasonable bounds
     const p = Math.min(1, Math.max(0.05, hitPct));
 
-    const expectedShots = Math.ceil(requiredHits / p);
+    // Use expected value for required shots (k/p) to reflect slider changes smoothly
+    const expectedShots = requiredHits / p;
     const timeBetweenShots = 60000 / rpm;
     const ttk = (expectedShots - 1) * timeBetweenShots; // no ADS
     const finalTTK = Math.round(ttk * 10) / 10;
