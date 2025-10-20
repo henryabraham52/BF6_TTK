@@ -227,6 +227,9 @@ function setupEventListeners() {
     if (recoilImpact) {
         recoilImpact.addEventListener('input', handleRecoilImpactChange);
     }
+
+    // Ensure correct initial visibility
+    updateRecoilImpactVisibility();
 }
 
 /**
@@ -325,7 +328,8 @@ function handleResetFilters() {
 
     const recoilGroup = document.getElementById('recoilImpactGroup');
     if (recoilGroup) {
-        recoilGroup.style.display = 'none';
+        recoilGroup.hidden = true;
+        recoilGroup.style.display = '';
     }
 
     // Update visualization
@@ -368,7 +372,8 @@ function applyDefaultFilterState() {
 
     const recoilGroup = document.getElementById('recoilImpactGroup');
     if (recoilGroup) {
-        recoilGroup.style.display = 'none';
+        recoilGroup.hidden = true;
+        recoilGroup.style.display = '';
     }
 
     const tableSearch = document.getElementById('tableSearch');
@@ -406,8 +411,22 @@ function handleTableSearch(event) {
 function handleRecoilImpactChange(event) {
     const value = parseInt(event.target.value, 10);
     currentFilters.recoilImpact = isNaN(value) ? 4 : value;
+    const valueLabel = document.getElementById('recoilImpactValue');
+    if (valueLabel) valueLabel.textContent = String(currentFilters.recoilImpact);
     updateVisualization();
     populateWeaponTable(applyFilters(currentFilters));
+}
+
+/**
+ * Ensure recoil impact slider visibility matches selected method
+ */
+function updateRecoilImpactVisibility() {
+    const group = document.getElementById('recoilImpactGroup');
+    if (!group) return;
+    const shouldShow = currentFilters.method === 'recoil';
+    group.hidden = !shouldShow;
+    // Clear any inline display that might conflict and let layout handle it
+    group.style.display = shouldShow ? '' : 'none';
 }
 
 /**
@@ -416,11 +435,7 @@ function handleRecoilImpactChange(event) {
 function handleFireModeChange(event) {
     currentFilters.method = event.target.value; // 'hip' | 'ads' | 'recoil'
 
-    // Toggle visibility of recoil impact slider
-    const group = document.getElementById('recoilImpactGroup');
-    if (group) {
-        group.style.display = currentFilters.method === 'recoil' ? 'block' : 'none';
-    }
+    updateRecoilImpactVisibility();
 
     updateVisualization();
     populateWeaponTable(applyFilters(currentFilters));

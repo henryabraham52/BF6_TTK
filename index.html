@@ -96,6 +96,19 @@
                     </small>
                 </div>
 
+                <div class="control-group" id="recoilImpactGroup" hidden>
+                    <label for="recoilImpact">Recoil Impact: <span id="recoilImpactValue">4</span></label>
+                    <input type="range" id="recoilImpact" min="1" max="5" step="1" value="4" list="recoilTicks">
+                    <datalist id="recoilTicks">
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </datalist>
+                    <small>Adjust how strongly recoil reduces hit% (1 = low, 5 = high). Default: 4.</small>
+                </div>
+
                 <div class="control-group">
                     <button id="resetFilters" class="btn-primary">Reset Filters</button>
                     <button id="compareAll" class="btn-secondary">Compare All</button>
