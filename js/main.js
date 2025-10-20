@@ -326,11 +326,7 @@ function handleResetFilters() {
         recoilImpact.value = '4';
     }
 
-    const recoilGroup = document.getElementById('recoilImpactGroup');
-    if (recoilGroup) {
-        recoilGroup.hidden = true;
-        recoilGroup.style.display = '';
-    }
+    updateRecoilImpactVisibility();
 
     // Update visualization
     resetFilters();
@@ -370,11 +366,7 @@ function applyDefaultFilterState() {
         recoilImpact.value = '4';
     }
 
-    const recoilGroup = document.getElementById('recoilImpactGroup');
-    if (recoilGroup) {
-        recoilGroup.hidden = true;
-        recoilGroup.style.display = '';
-    }
+    updateRecoilImpactVisibility();
 
     const tableSearch = document.getElementById('tableSearch');
     if (tableSearch) {
@@ -422,11 +414,9 @@ function handleRecoilImpactChange(event) {
  */
 function updateRecoilImpactVisibility() {
     const group = document.getElementById('recoilImpactGroup');
-    if (!group) return;
     const shouldShow = currentFilters.method === 'recoil';
-    group.hidden = !shouldShow;
-    // Clear any inline display that might conflict and let layout handle it
-    group.style.display = shouldShow ? '' : 'none';
+    document.body.classList.toggle('show-recoil', shouldShow);
+    if (group) group.hidden = !shouldShow;
 }
 
 /**

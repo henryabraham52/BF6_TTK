@@ -131,7 +131,7 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
             : ((currentFilters && currentFilters.includeADS) ? 'ads' : 'hip');
         let ttk;
         if (method === 'recoil') {
-            ttk = calculateRecoilAdjustedTTK(w[range], w.RPM, w.Precision, w.Control, range, w['Weapon Type']);
+            ttk = calculateRecoilAdjustedTTK(w[range], w.RPM, w.Precision, w.Control, range, w['Weapon Type'], (currentFilters && currentFilters.recoilImpact) || 4);
         } else {
             const adsTime = method === 'ads' ? w.ADS : 0;
             ttk = calculateTTK(w[range], w.RPM, adsTime);
@@ -150,7 +150,8 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
     const method = (currentFilters && currentFilters.method)
         ? currentFilters.method
         : ((currentFilters && currentFilters.includeADS) ? 'ads' : 'hip');
-    const methodLabel = method === 'ads' ? 'ADS' : (method === 'recoil' ? 'Recoil Adjusted' : 'Hip Fire');
+    const impact = (currentFilters && currentFilters.recoilImpact) || 4;
+    const methodLabel = method === 'ads' ? 'ADS' : (method === 'recoil' ? `Recoil Adjusted (Impact ${impact})` : 'Hip Fire');
 
     const trace = {
         x: ttksWithADS,

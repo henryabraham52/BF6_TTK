@@ -275,6 +275,10 @@ select[multiple] {
     min-height: 150px;
 }
 
+/* Recoil Impact control visibility */
+#recoilImpactGroup { display: none; }
+.show-recoil #recoilImpactGroup { display: block; }
+
 /* ============================================
    Statistics Summary
    ============================================ */
