@@ -58,15 +58,26 @@ const ttk = (shotsToKill - 1) * timeBetweenShots;
 - Time between shots: 60000/830 = 72.3ms
 - **TTK: (4-1) × 72.3 = 216.9ms**
 
-#### Recoil Adjusted Method
-- Uses hipfire (no ADS time) and models misses from recoil/precision.
-- Hit_Percentage_base = (Precision/100) × (Control/100)
-- Distance penalty: 10m=1.0 (min 0.9 floor), 20m=0.95, 35m=0.9, 50m=0.85, 70m=0.8
-- Impact slider (1–5, default 4) scales penalty: hitPct = 1 - (1 - base×rangeMult) × (impact/4)
-- Probability clamp: p ∈ [0.05, 1]
-- Expected shots: ceil(ShotsToKill / p)
-- TTK = (ExpectedShots - 1) × (60000 / RPM)
-- Sniper Rifles and Shotguns are immune (assume all shots land)
+#### Recoil Adjusted — formula and methodology
+
+$$
+\begin{aligned}
+H &= 100 \,\text{(health)} \\
+S &= \lceil H / D \rceil \,\text{(shots to kill from damage }D\text{)} \\
+B &= \tfrac{\text{Precision}}{100},\quad C = \tfrac{\text{Control}}{100} \\
+p_{\text{base}} &= B\,C \\
+p_{\text{range}} &= \begin{cases}
+\max\{0.90,\; p_{\text{base}}\cdot 1.00\}, & r=10\text{m} \\
+ p_{\text{base}}\cdot m(r), & r\in\{20,35,50,70\}\text{m},\; m=\{0.95,0.90,0.85,0.80\}
+\end{cases} \\
+\alpha &= \tfrac{i}{4},\; i\in\{1,2,3,4,5\}\;\text{(impact level, default }i=4\text{)} \\
+p &= 1 - \bigl(1 - p_{\text{range}}\bigr)\,\alpha,\quad p\leftarrow\operatorname{clip}(p,\,0.05,\,1.0) \\
+\text{expectedShots} &= \tfrac{S}{p} \\
+\text{TTK}_{\text{ms}} &= \bigl(\text{expectedShots} - 1\bigr)\cdot \tfrac{60000}{\text{RPM}}
+\end{aligned}
+$$
+
+Notes: hipfire only (ADS excluded); Sniper Rifles and Shotguns use $p=1$ (no recoil penalty).
 
 ## 📁 Project Structure
 
