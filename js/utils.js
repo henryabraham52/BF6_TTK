@@ -54,16 +54,30 @@ function calculateTTK(damage, rpm, adsTime = 0) {
  * @param {string} range - one of RANGES
  * @returns {number|null}
  */
-function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100, range = '10M') {
+function calculateRecoilAdjustedTTK(damage, rpm, precision = 100, control = 100, range = '10M', weaponType = '') {
     if (!damage || !rpm || damage <= 0 || rpm <= 0) {
         return null;
     }
 
     const requiredHits = Math.ceil(PLAYER_HEALTH / damage);
 
-    let hitPct = (Number(precision) / 100) * (Number(control) / 100); // probability 0..1
+    // Snipers and shotguns are immune (assume all shots land)
+    const type = (weaponType || '').toUpperCase();
+    if (type === 'SNIPER RIFLE' || type === 'SHOTGUN') {
+        const timeBetweenShotsImmune = 60000 / rpm;
+        const ttkImmune = (requiredHits - 1) * timeBetweenShotsImmune; // no ADS
+        const finalImmune = Math.round(ttkImmune * 10) / 10;
+        return finalImmune === 0 ? 1 : finalImmune;
+    }
+
+    let hitPct = (Number(precision) / 100) * (Number(control) / 100); // base probability 0..1
     const rangeMult = getRangeAccuracyMultiplier(range);
     hitPct = hitPct * rangeMult;
+
+    // Minimal penalty at 10m: floor at 0.9
+    if (range === '10M') {
+        hitPct = Math.max(hitPct, 0.9);
+    }
 
     // Clamp probability to reasonable bounds
     const p = Math.min(1, Math.max(0.05, hitPct));

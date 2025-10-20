@@ -147,9 +147,9 @@ No installation required! This is a static website that runs entirely in the bro
 The weapon data is stored in `data/ttk.csv`:
 
 ```csv
-Weapon Type,Weapon,10M,20M,35M,50M,70M,RPM,DPS
-ASSAULT RIFLE,M433,25,25,21,20,20,830,20750
-CARBINE,M4A1,21,21,18,17,17,900,18900
+Weapon Type,Weapon,10M,20M,35M,50M,70M,RPM,DPS,ADS,Precision,Control
+ASSAULT RIFLE,M433,25,25,20,20,20,830,346,250,20,41
+CARBINE,M4A1,21,21,18,17,17,900,315,200,25,40
 ```
 
 ### Fields
@@ -161,6 +161,9 @@ CARBINE,M4A1,21,21,18,17,17,900,18900
 | `10M - 70M` | Damage at specific ranges |
 | `RPM` | Rounds per minute (fire rate) |
 | `DPS` | Damage per second |
+| `ADS` | Aim down sights time (milliseconds) |
+| `Precision` | Hipfire precision score (0–100) |
+| `Control` | Recoil control score (0–100) |
 
 ## 🤝 Contributing
 

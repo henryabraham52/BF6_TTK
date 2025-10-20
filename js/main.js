@@ -484,7 +484,7 @@ function populateWeaponTable(weapons) {
         let ttk10M;
         if (weapon['10M'] && weapon.RPM) {
             if (method === 'recoil') {
-                ttk10M = `${calculateRecoilAdjustedTTK(weapon['10M'], weapon.RPM, weapon.Precision, weapon.Control, '10M')}ms`;
+                ttk10M = `${calculateRecoilAdjustedTTK(weapon['10M'], weapon.RPM, weapon.Precision, weapon.Control, '10M', weapon['Weapon Type'])}ms`;
             } else {
                 const adsTime = method === 'ads' ? weapon.ADS : 0;
                 ttk10M = `${calculateTTK(weapon['10M'], weapon.RPM, adsTime)}ms`;
