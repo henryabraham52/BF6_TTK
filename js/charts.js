@@ -137,15 +137,14 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
             ttk = calculateTTK(w[range], w.RPM, adsTime);
         }
         return { ...w, calculatedTTK: ttk };
-    });
+    }).filter(w => w.calculatedTTK !== null && !isNaN(w.calculatedTTK));
 
-    // Sort by calculated TTK (ascending - lower is better) and reverse for display
-    const sortedWeapons = weaponsWithTTK.sort((a, b) => {
+    // Sort ascending by TTK (lower is better) and take top 15 for display consistency
+    const topWeapons = weaponsWithTTK.sort((a, b) => {
         return (a.calculatedTTK || Infinity) - (b.calculatedTTK || Infinity);
-    }).reverse();
+    }).slice(0, 15);
 
-    // Extract TTK values for chart
-    const ttksWithADS = sortedWeapons.map(w => w.calculatedTTK);
+    const ttksForChart = topWeapons.map(w => w.calculatedTTK);
 
     const method = (currentFilters && currentFilters.method)
         ? currentFilters.method
@@ -154,12 +153,12 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
     const methodLabel = method === 'ads' ? 'ADS' : (method === 'recoil' ? `Recoil Adjusted (Impact ${impact})` : 'Hip Fire');
 
     const trace = {
-        x: ttksWithADS,
-        y: sortedWeapons.map(w => w.Weapon),
+        x: ttksForChart,
+        y: topWeapons.map(w => w.Weapon),
         type: 'bar',
         orientation: 'h',
         marker: {
-            color: sortedWeapons.map(w => getWeaponTypeColor(w['Weapon Type'])),
+            color: topWeapons.map(w => getWeaponTypeColor(w['Weapon Type'])),
             line: { width: 1, color: '#fff' }
         },
         hovertemplate:
@@ -184,10 +183,11 @@ function createTTKChart(weapons, range = '10M', containerId = 'ttkChart') {
             title: '',
             gridcolor: '#333',
             color: '#ccc',
-            automargin: true
+            automargin: true,
+            autorange: 'reversed' // fastest (lowest TTK) at the top
         },
         showlegend: false,
-        height: Math.max(400, sortedWeapons.length * 25)
+        height: Math.max(400, topWeapons.length * 25)
     };
 
     Plotly.newPlot(containerId, [trace], layout, CHART_CONFIG);
